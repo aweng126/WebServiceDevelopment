@@ -4,12 +4,9 @@ html{height:100%}
 body{height:100%;margin:0px;padding:0px}  
 
 
-
 #container{	
 	height:100%;
 	}  
-
-
 
 #searchbox {
 	position:fixed; 
@@ -19,7 +16,6 @@ body{height:100%;margin:0px;padding:0px}
 	width: 360px;
 	border-radius: 8px;
 }
-
 
 input{
 
