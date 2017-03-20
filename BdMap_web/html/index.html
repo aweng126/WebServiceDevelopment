@@ -24,7 +24,6 @@
 <!--自动提示栏-->
 <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 	
-	
 </div>
 
 
@@ -41,15 +40,16 @@ map.addControl(new BMap.NavigationControl());  //平移缩放控件
 map.addControl(new BMap.ScaleControl());       //比例尺控件
 //map.addControl(new BMap.OverviewMapControl());    
 map.addControl(new BMap.MapTypeControl());     //地图显示样式控件
-map.enableScrollWheelZoom();
 
+map.enableScrollWheelZoom();                   //地图鼠标滚动放大缩小
+map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针样式
 
 
 /*浏览器定位功能: 
  * 这里位置有偏差，显示113.941887,22.53565
  * 实际位置：117.02496707,36.68278473
  * 需要再行验证，中间有数据处理*/
- var geolocation =new BMap.Geolocation();
+/* var geolocation =new BMap.Geolocation();
  	geolocation.getCurrentPosition(function(r){
 		if(this.getStatus() == BMAP_STATUS_SUCCESS){
 			var mk = new BMap.Marker(r.point);
@@ -60,7 +60,7 @@ map.enableScrollWheelZoom();
 		else {
 			console.log('failed'+this.getStatus());
 		}        
-	},{enableHighAccuracy: true})
+	},{enableHighAccuracy: true})*/
  	
  	//关于状态码
 	//BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
@@ -72,6 +72,17 @@ map.enableScrollWheelZoom();
 	//BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
 	//BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
 	//BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
+ 	
+ 	/*根据ip定位*/
+	function myFun(result){
+		var cityName = result.name;
+		map.setCenter(cityName);
+		map.setZoom(12);
+		//alert("当前定位城市:"+cityName);
+	}
+	var myCity = new BMap.LocalCity();
+	myCity.get(myFun);
+ 	
  	
  	
  	
@@ -117,7 +128,7 @@ map.enableScrollWheelZoom();
 		map.clearOverlays();    //清除地图上所有覆盖物
 		function myFun(){
 			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
-			map.centerAndZoom(pp, 18);
+			map.centerAndZoom(pp, 16);
 			map.addOverlay(new BMap.Marker(pp));    //添加标注
 		}
 		var local = new BMap.LocalSearch(map, { //智能搜索
@@ -137,14 +148,7 @@ $("#searchbutton").click(function (){
 	});
 	local.search(searchContent);
 	
-	
 })
-
-/*搜索功能
-var local = new BMap.LocalSearch(map, {
-		renderOptions:{map: map}
-	});
-	local.search("齐鲁软件学院");*/
 
 </script>
 </body>  
