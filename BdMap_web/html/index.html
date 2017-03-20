@@ -8,21 +8,45 @@
 <link rel="stylesheet" href="../css/bdmap.css" />
 
 <title>Hello, BdMap_web</title>  
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kTUUa2A5g8rsQ7yemlcjNDAPTazPZUeC">
-</script>
 </head>  
  
 <body>  
+	
+
+	<!--盛放整个地图的容器-->
 <div id="container"></div> 
+<!--搜索框-->
+<!--<div id="searchbox" >-->
+	
+<input id="searchcontent"  value="地点，路线"/>
+	
+<!--</div>-->
+
+
+<script type="text/javascript" 
+	src="http://api.map.baidu.com/api?v=2.0&ak=kTUUa2A5g8rsQ7yemlcjNDAPTazPZUeC">
+</script>
+
 <script type="text/javascript"> 
 var map = new BMap.Map("container");          // 创建地图实例  
 var point = new BMap.Point(116.404, 39.915);  // 创建点坐标  
-map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别  
+//map.centerAndZoom(point, 10);                 // 初始化地图，设置中心点坐标和地图级别  
 map.addControl(new BMap.NavigationControl());  //平移缩放控件
 map.addControl(new BMap.ScaleControl());       //比例尺控件
 //map.addControl(new BMap.OverviewMapControl());    
 map.addControl(new BMap.MapTypeControl());     //地图显示样式控件
 map.enableScrollWheelZoom();
-</script>  
+
+
+/*搜索功能*/
+var local = new BMap.LocalSearch(map, {
+		renderOptions:{map: map}
+	});
+	local.search("齐鲁软件学院");
+
+</script>
+
+
+
 </body>  
 </html>

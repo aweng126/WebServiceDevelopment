@@ -3,4 +3,33 @@ html{height:100%}
 
 body{height:100%;margin:0px;padding:0px}  
 
-#container{height:100%}  
+
+
+#container{	
+	height:100%;
+	}  
+
+/*#searchbox {
+	position:fixed; 
+	top: 23px; 
+	left: 64px;
+	height:38px;
+	width: 240px;
+	background: bisque;
+	border: none;
+}*/
+
+
+input{
+
+	position:fixed; 
+	top: 23px; 
+	left: 64px;
+	height:36px;
+	width: 240px;
+	font-size: 20px;
+	border-radius: 8px;
+	border: none;
+	text-align: center;
+   
+}
