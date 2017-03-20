@@ -12,7 +12,6 @@
  
 <body>  
 	
-
 	<!--盛放整个地图的容器-->
 <div id="container"></div> 
 <!--搜索框-->
@@ -32,6 +31,7 @@
 </script>
 <script type="text/javascript" src="../js/jquery-3.1.1.min.js" ></script>
 
+
 <script type="text/javascript"> 
 var map = new BMap.Map("container",{minZoom:2,maxZoom:18});    // 创建地图实例 同时设置最大最小级别  
 var point = new BMap.Point(116.404, 39.915);  // 创建点坐标  
@@ -46,7 +46,7 @@ map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针�
 
 
 /*浏览器定位功能: 
- * 这里位置有偏差，显示113.941887,22.53565
+ * 这里位置有偏差，显示113.941887,22.53565 直接定位去了深圳。
  * 实际位置：117.02496707,36.68278473
  * 需要再行验证，中间有数据处理*/
 /* var geolocation =new BMap.Geolocation();
@@ -78,16 +78,16 @@ map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针�
 		var cityName = result.name;
 		map.setCenter(cityName);
 		map.setZoom(12);
-		//alert("当前定位城市:"+cityName);
+		alert("通过ip定位定位城市:"+cityName);
 	}
 	var myCity = new BMap.LocalCity();
 	myCity.get(myFun);
  	
+
  	
  	
  	
  /*搜索框自动提示*/
-
 	function G(id) {
 		return document.getElementById(id);
 	}
@@ -128,7 +128,7 @@ map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针�
 		map.clearOverlays();    //清除地图上所有覆盖物
 		function myFun(){
 			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
-			map.centerAndZoom(pp, 16);
+			map.centerAndZoom(pp, 14);
 			map.addOverlay(new BMap.Marker(pp));    //添加标注
 		}
 		var local = new BMap.LocalSearch(map, { //智能搜索
@@ -142,13 +142,131 @@ map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针�
 /*搜索框具体功能实现*/
 $("#searchbutton").click(function (){
 	var searchContent=$("#searchcontent").val();
-	/*console.log(searchContent.length);  console.log("111"+searchContent+"222");*/
 	var local = new BMap.LocalSearch(map, {
 		renderOptions:{map: map}
 	});
 	local.search(searchContent);
 	
 })
+
+
+   var point;
+
+ 	var startPoint=new BMap.Point();
+ 	var endPoint=new BMap.Point();
+ 		var myIcon = new BMap.Icon("http://developer.baidu.com/map/jsdemo/img/fox.gif", new BMap.Size(300,157));
+ 	
+ 	var startmarker ;
+ 	var endmarker ;
+ 	
+ 	/*右键监听事件，获得点击坐标*/
+ 	map.addEventListener("rightclick",function(e){
+ 		point=new BMap.Point(e.point.lng,e.point.lat);
+// 		alert("click"+e.Point.lat+"click"+e.Point.lng);
+ 	})
+ 	
+ 	
+ 	function isPointLegal(){
+ 		
+ 		var flag=false;
+ 		
+ 		if(startPoint==null){
+ 			alert("起始点不能为空");
+ 		}else if(endPoint==null){
+ 			alert("终点不能为空");
+ 		}else{
+ 		flag=true;
+ 		
+ 		}
+ 		
+ 		return flag;
+ 	}
+ 	
+ 	/*设置右键菜单*/
+ 	var menu = new BMap.ContextMenu();
+ 	
+ 	   /*设置子菜单*/
+ 	var txtMenuItem=[
+ 	{
+ 	    text:'设为起点',
+ 	    callback:function(){
+ 		/*保存起点，同时设置图标
+ 		 */
+ 		startPoint=point;
+ 		point=null;
+ 		
+ 		
+ 		if(startmarker!=null){
+ 			map.removeOverlay(startmarker);
+ 		}
+ 		
+ 	//创建小狐狸
+	startmarker = new BMap.Marker(startPoint,{icon:myIcon});  // 创建标注
+	map.addOverlay(startmarker);              // 将标注添加到地图中
+ 		
+ 	  }
+ 	},
+ 	
+ 	{
+ 		text:'设为终点',
+ 	    callback:function(){
+ 		/*保存终点，同时设置图标
+ 		 */
+ 	
+ 		endPoint=point;
+ 		point=null;
+ 		if(endmarker!=null){
+ 			map.removeOverlay(endmarker);
+ 		}
+ 		
+
+	endmarker = new BMap.Marker(endPoint,{icon:myIcon});  // 创建标注
+	map.addOverlay(endmarker);   
+ 		
+ 	  }
+ 	},
+ 	{
+ 		text:'步行路径规划',
+ 		callback:function(){
+ 			if(isPointLegal()){
+ 				/*进行路径规划*/
+ 			   var walking = new BMap.WalkingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+	           walking.search(startPoint, endPoint);
+ 			};
+ 	
+ 		}
+ 	},
+ 	{
+ 		text:'公交路径规划',
+ 		callback:function(){
+ 			/*进行路径规划*/
+ 			
+ 		var transit = new BMap.TransitRoute(map, {
+		renderOptions: {map: map}
+	});
+	transit.search(startPoint, endPoint);
+ 			
+ 		}
+ 	},
+ 	{
+ 		text:'驾车路径规划',
+ 		callback:function(){
+ 			/*进行路径规划*/
+ 			
+ 	var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+    driving.search(startPoint, endPoint);
+ 				
+ 		}
+ 	}
+ 	];
+ 	
+ 	for(var i=0; i < txtMenuItem.length; i++){
+		menu.addItem(new BMap.MenuItem(txtMenuItem[i].text,txtMenuItem[i].callback,100));
+		menu.addSeparator();
+	}
+    
+	map.addContextMenu(menu);
+ 	
 
 </script>
 </body>  
