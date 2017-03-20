@@ -9,27 +9,39 @@ body{height:100%;margin:0px;padding:0px}
 	height:100%;
 	}  
 
-/*#searchbox {
+
+
+#searchbox {
 	position:fixed; 
 	top: 23px; 
 	left: 64px;
-	height:38px;
-	width: 240px;
-	background: bisque;
-	border: none;
-}*/
+	height: 36px;
+	width: 360px;
+	border-radius: 8px;
+}
 
 
 input{
 
-	position:fixed; 
-	top: 23px; 
-	left: 64px;
 	height:36px;
 	width: 240px;
 	font-size: 20px;
-	border-radius: 8px;
+	border-radius:8px 0px 0px 8px ;
 	border: none;
 	text-align: center;
+	float: left;
+	color: grey;
    
+}
+
+button{
+	position:fixed; 
+	top: 23px; 
+	height:38px;
+	width: 60px;
+	font-size: 20px;
+	float: left;
+	border: none;
+	border-radius: 0px 8px 8px 0px;
+	background: lightblue;
 }
